@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liyi.cms.dao.PlanDao">
+	<select id="selectPlan" resultType="Plan">
+		SELECT p.*,d.`name` as dname FROM zhunnengyuan_2019plan p LEFT JOIN zhunneng_department d ON (p.did=d.id)
+		<where>
+			<if test="name!=null and name!=''">
+				p.name like "%"#{name}"%"
+			</if>
+		</where>
+	</select>
+	<select id="selectDepartment" resultType="Department">
+		select * from zhunneng_department
+	</select>
+	<insert id="insert">
+		INSERT INTO zhunnengyuan_2019plan(name,amout,manger,content,did)VALUES 
+		(#{name},#{amout},#{manger},#{content},#{did})
+	</insert>
+	<insert id="insertPlan">
+		INSERT INTO zhunnengyuan_2019plan(name,amout,manger,content,did)VALUES 
+		<foreach collection="list" item="p" separator=",">
+			(#{p.name},#{p.amout},#{p.manger},#{p.content},#{p.did})
+		</foreach>
+	</insert>
+	<delete id="deletePlan">
+		DELETE FROM zhunnengyuan_2019plan WHERE id in(${ids})
+	</delete>
+	<select id="selectPlanById" resultType="Plan">
+		SELECT p.*,d.`name` as dname FROM zhunnengyuan_2019plan p LEFT JOIN zhunneng_department d ON (p.did=d.id) WHERE p.id=#{id}
+	</select>
+	<update id="updatePlan">
+		UPDATE zhunnengyuan_2019plan
+		SET name=#{name},amout=#{amout},manger=#{manger},content=#{content},did=#{did} 
+		WHERE id=#{id}
+	</update>
+</mapper>
